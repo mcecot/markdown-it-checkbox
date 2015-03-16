@@ -1,0 +1,33 @@
+.
+[ ] unchecked
+.
+<p><input type="checkbox" id="checkbox0"><label for="checkbox0">unchecked</label></p>
+.
+
+.
+[_] unchecked
+.
+<p><input type="checkbox" id="checkbox1"><label for="checkbox1">unchecked</label></p>
+.
+
+.
+[x] checked
+.
+<p><input type="checkbox" id="checkbox2" checked="true"><label for="checkbox2">checked</label></p>
+.
+
+.
+[X] checked
+.
+<p><input type="checkbox" id="checkbox3" checked="true"><label for="checkbox3">checked</label></p>
+.
+
+.
+- [ ] unchecked
+- [X] checked
+.
+<ul>
+<li><input type="checkbox" id="checkbox4"><label for="checkbox4">unchecked</label></li>
+<li><input type="checkbox" id="checkbox5" checked="true"><label for="checkbox5">checked</label></li>
+</ul>
+.
