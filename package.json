@@ -14,8 +14,6 @@
   ],
   "devDependencies": {
     "browserify": "*",
-    "coffee-script": "^1.9.1",
-    "coffeelint": "^1.9.2",
     "coveralls": "^2.11.2",
     "eslint": "0.13.0",
     "eslint-plugin-nodeca": "^1.0.0",
