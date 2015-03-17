@@ -10,8 +10,8 @@ CURR_HEAD   := $(firstword $(shell git show-ref --hash HEAD | cut -b -6) master)
 GITHUB_PROJ := https://github.com//mcecot/${NPM_PACKAGE}
 
 
-lint: compile
-	./node_modules/.bin/eslint build/index.js
+lint:
+	./node_modules/.bin/eslint --reset .
 
 test: lint
 	./node_modules/.bin/mocha -R spec
@@ -34,9 +34,9 @@ clean:
 compile: clean
 	coffee -c -b -o ./dist/ ./index.coffee
 
-browserify: compile
+browserify: lint
 	# Browserify
-	./node_modules/.bin/browserify ./dist/index.js \
+	./node_modules/.bin/browserify . \
 		-s markdownitCheckbox \
 		> dist/markdown-it-checkbox.js
 	# Minify
