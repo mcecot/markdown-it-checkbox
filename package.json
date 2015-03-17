@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-checkbox",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin to create checkboxes for markdown-it markdown parser",
   "repository": "mcecot/markdown-it-checkbox",
   "license": "MIT",
