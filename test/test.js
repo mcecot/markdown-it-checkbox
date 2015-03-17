@@ -1,7 +1,6 @@
 "use strict";
 var path      = require('path');
 var generate  = require('markdown-it-testgen');
-var coffee    = require('coffee-script/register');
 
 /*eslint-env mocha */
 describe("markdown-it-checkbox", function() {

@@ -23,27 +23,17 @@ coverage:
 test-ci: lint
 	istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
 
-# test:
-# 	$(MAKE) lint
-# 	@NODE_ENV=test ./node_modules/.bin/mocha -b --reporter $(REPORTER)
-
-clean:
-	rm -rf dist
+browserify:
+	rm -rf ./dist
 	mkdir dist
-
-compile: clean
-	coffee -c -b -o ./dist/ ./index.coffee
-
-browserify: lint
 	# Browserify
-	./node_modules/.bin/browserify . \
-		-s markdownitCheckbox \
-		> dist/markdown-it-checkbox.js
+	( printf "/*! ${NPM_PACKAGE} ${NPM_VERSION} ${GITHUB_PROJ} @license MIT */" ; \
+		./node_modules/.bin/browserify ./ -s markdownitCheckbox \
+		) > dist/markdown-it-checkbox.js
 	# Minify
-	./node_modules/.bin/uglifyjs dist/markdown-it-checkbox.js \
-		-b beautify=false,ascii-only=true -c -m -v \
+	./node_modules/.bin/uglifyjs dist/markdown-it-checkbox.js -b beautify=false,ascii-only=true -c -m \
 		--preamble "/*! ${NPM_PACKAGE} ${NPM_VERSION} ${GITHUB_PROJ} @license MIT */" \
-	 	> dist/markdown-it-checkbox.min.js
+		> dist/markdown-it-checkbox.min.js
 
 .PHONY: lint test coverage
 .SILENT: lint test
