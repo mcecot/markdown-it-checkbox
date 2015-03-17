@@ -24,12 +24,12 @@ bower install markdown-it-checkbox --save
 ```js
 var md = require('markdown-it')()
             .use(require('markdown-it-checkbox'));
+
+md.render('[ ] unchecked') // => '<p><mark>marked</mark></p>'
 ```
 
 _Differences in browser._ If you load script directly into the page, without
 package system, module will add itself globally as `window.markdownitCheckbox`.
-
-
 
 
 ## License

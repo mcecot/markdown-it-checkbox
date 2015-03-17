@@ -10,9 +10,8 @@ CURR_HEAD   := $(firstword $(shell git show-ref --hash HEAD | cut -b -6) master)
 GITHUB_PROJ := https://github.com//mcecot/${NPM_PACKAGE}
 
 
-lint:
-	./node_modules/.bin/eslint dist/index.js
-	./node_modules/.bin/coffeelint index.coffee
+lint: compile
+	./node_modules/.bin/eslint build/index.js
 
 test: lint
 	./node_modules/.bin/mocha -R spec
@@ -29,11 +28,11 @@ test-ci: lint
 # 	@NODE_ENV=test ./node_modules/.bin/mocha -b --reporter $(REPORTER)
 
 clean:
-	rm -rf ./dist
+	rm -rf dist
 	mkdir dist
 
 compile: clean
-	coffee -c -o ./dist/ ./index.coffee
+	coffee -c -b -o ./dist/ ./index.coffee
 
 browserify: compile
 	# Browserify
