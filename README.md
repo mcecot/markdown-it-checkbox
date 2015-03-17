@@ -25,7 +25,11 @@ bower install markdown-it-checkbox --save
 var md = require('markdown-it')()
             .use(require('markdown-it-checkbox'));
 
-md.render('[ ] unchecked') // => '<p><mark>marked</mark></p>'
+md.render('[ ] unchecked') // =>
+// <p>
+//  <input type="checkbox" id="checkbox0">
+//  <label for="checkbox0">unchecked</label>
+// </p>
 ```
 
 _Differences in browser._ If you load script directly into the page, without
