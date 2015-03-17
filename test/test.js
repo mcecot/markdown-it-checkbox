@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 var path      = require('path');
 var generate  = require('markdown-it-testgen');
 var coffee    = require('coffee-script/register');
 
 /*eslint-env mocha */
-describe('markdown-it-checkbox', function() {
+describe("markdown-it-checkbox", function() {
   var md;
-  md = require('markdown-it')().use(require('..'));
-  generate(path.join(__dirname, 'fixtures/checkbox.txt'), md);
+  md = require("markdown-it")().use(require(".."));
+  generate(path.join(__dirname, "fixtures/checkbox.txt"), md);
 });

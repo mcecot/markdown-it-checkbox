@@ -11,6 +11,7 @@ GITHUB_PROJ := https://github.com//mcecot/${NPM_PACKAGE}
 
 
 lint:
+	./node_modules/.bin/eslint dist/index.js
 	./node_modules/.bin/coffeelint index.coffee
 
 test: lint
@@ -23,10 +24,18 @@ coverage:
 test-ci: lint
 	istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
 
-browserify:
+# test:
+# 	$(MAKE) lint
+# 	@NODE_ENV=test ./node_modules/.bin/mocha -b --reporter $(REPORTER)
+
+clean:
 	rm -rf ./dist
 	mkdir dist
-	./node_modules/.bin/coffee -c -o ./dist/ ./index.coffee 
+
+compile: clean
+	coffee -c -o ./dist/ ./index.coffee
+
+browserify: compile
 	# Browserify
 	./node_modules/.bin/browserify ./dist/index.js \
 		-s markdownitCheckbox \
