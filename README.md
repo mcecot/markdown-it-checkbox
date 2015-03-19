@@ -1,8 +1,5 @@
-# markdown-it-checkbox
-
-[![Build Status](https://img.shields.io/travis/mcecot/markdown-it-checkbox/master.svg?style=flat)](https://travis-ci.org/mcecot/markdown-it-checkbox)
-[![NPM version](https://img.shields.io/npm/v/markdown-it-checkbox.svg?style=flat)](https://www.npmjs.org/package/markdown-it-checkbox)
-[![Coverage Status](https://img.shields.io/coveralls/mcecot/markdown-it-checkbox/master.svg?style=flat)](https://coveralls.io/r/markdown-it/markdown-it-checkbox)
+# markdown-it-checkbox [![NPM version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependency Status][depstat-image]][depstat-url] [![devDependency Status][devdepstat-image]][devdepstat-url]
 
 > Plugin to create checkboxes for [markdown-it](https://github.com/markdown-it/markdown-it) markdown parser.
 
