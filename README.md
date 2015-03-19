@@ -5,6 +5,8 @@
 
 This plugin allows to create checkboxes for tasklists as discussed [here](http://talk.commonmark.org/t/task-lists-in-standard-markdown/41).
 
+
+
 ## Usage
 
 ## Install
@@ -35,4 +37,22 @@ package system, module will add itself globally as `window.markdownitCheckbox`.
 
 ## License
 
-[MIT](https://github.com/markdown-it/markdown-it-for-inline/blob/master/LICENSE)
+
+## License
+
+[MIT License](https://github.com/mcecot/markdown-it-checkbox/blob/master/LICENSE) © 2015 Markus Cecot
+
+[npm-url]: https://npmjs.org/package/markdown-it-checkbox
+[npm-image]: https://img.shields.io/npm/v/markdown-it-checkbox.svg
+
+[travis-url]: http://travis-ci.org/mcecot/markdown-it-checkbox
+[travis-image]: https://secure.travis-ci.org/mcecot/markdown-it-checkbox.svg?branch=master
+
+[coveralls-url]: https://coveralls.io/r/mcecot/markdown-it-checkbox
+[coveralls-image]: https://img.shields.io/coveralls/mcecot/markdown-it-checkbox.svg
+
+[depstat-url]: https://david-dm.org/mcecot/markdown-it-checkbox
+[depstat-image]: https://david-dm.org/mcecot/markdown-it-checkbox.svg
+
+[devdepstat-url]: https://david-dm.org/mcecot/markdown-it-checkbox#info=devDependencies
+[devdepstat-image]: https://david-dm.org/mcecot/markdown-it-checkbox/dev-status.svg
