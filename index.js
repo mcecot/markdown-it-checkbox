@@ -1,11 +1,11 @@
 "use strict"
 
-function checkboxReplace (md) {
+function checkboxReplace (md, options) {
 
   var arrayReplaceAt, lastId, options, pattern, splitTextToken;
   arrayReplaceAt = md.utils.arrayReplaceAt;
   lastId = 0;
-  options = {
+  options = options || {
     divWrap: false
   };
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i;
@@ -60,7 +60,7 @@ function checkboxReplace (md) {
      * closing tags
      */
     nodes.push(new Token("label_close", "label", -1));
-    if (options.div_wrap) {
+    if (options.divWrap) {
       nodes.push(new Token("checkbox_close", "div", -1));
     }
     return nodes;
@@ -90,6 +90,6 @@ function checkboxReplace (md) {
   };
 };
 
-module.exports = function checkbox_plugin(md) {
-  md.core.ruler.push("checkbox", checkboxReplace(md));
+module.exports = function checkbox_plugin(md, options) {
+  md.core.ruler.push("checkbox", checkboxReplace(md, options));
 };
