@@ -1,0 +1,5 @@
+.
+[ ] unchecked
+.
+<p><input type="checkbox" id="checkbox0"><label for="checkbox0">unchecked</label></p>
+.

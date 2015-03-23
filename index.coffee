@@ -1,37 +1,36 @@
+_ = require 'underscore'
 
 # Checkbox replacement logic.
 #
 
-checkboxReplace = (md) ->
+checkboxReplace = (md, options, Token) ->
   "use strict"
 
   arrayReplaceAt = md.utils.arrayReplaceAt
   lastId = 0
-  options =
+  defaults =
     divWrap: false
+    divClass: 'checkbox'
+    idPrefix: 'checkbox'
+
+  options = _.extend defaults, options
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
 
-  splitTextToken = (original,Token) ->
-    text      = original.content
-    nodes     = []
-    matches   = text.match(pattern)
-    value     = matches[1]
-    label     = matches[2]
 
-    checked = (value=="X" || value=="x") ? true : false
-
+  createTokens = (checked, label, Token) ->
+    nodes = []
     ###*
     # <div class="checkbox">
     ###
     if options.divWrap
       token = new Token("checkbox_open", "div", 1)
-      token.attrs = [["class","checkbox"]]
+      token.attrs = [["class",options.divClass]]
       nodes.push token
 
     ###*
     # <input type="checkbox" id="checkbox{n}" checked="true">
     ###
-    id = "checkbox"+lastId
+    id = options.idPrefix + lastId
     lastId += 1
     token = new Token("checkbox_input", "input", 0)
     token.attrs = [["type","checkbox"],["id",id]]
@@ -57,13 +56,30 @@ checkboxReplace = (md) ->
     # closing tags
     ###
     nodes.push new Token("label_close", "label", -1)
-    if options.div_wrap
+    if options.divWrap
       nodes.push new Token("checkbox_close", "div", -1)
 
     return nodes
 
+  splitTextToken = (original, Token) ->
 
-  return (state)->
+    text      = original.content
+    matches   = text.match pattern
+
+    if matches == null
+      return original
+
+    checked   = false
+    value     = matches[1]
+    label     = matches[2]
+
+    if (value == "X" || value == "x")
+      checked = true
+
+    return createTokens(checked, label, Token)
+
+
+  return (state) ->
     blockTokens = state.tokens
     j = 0
     l = blockTokens.length
@@ -77,10 +93,9 @@ checkboxReplace = (md) ->
       i = tokens.length - 1
       while i >= 0
         token = tokens[i]
-        if token.type == "text" and pattern.test(token.content)
-          blockTokens[j].children = tokens = arrayReplaceAt(
-            tokens, i, splitTextToken(token,state.Token)
-          )
+        blockTokens[j].children = tokens = arrayReplaceAt(
+          tokens, i, splitTextToken(token, state.Token)
+        )
         i--
       j++
     return
@@ -88,7 +103,7 @@ checkboxReplace = (md) ->
   return
 
 ###global module###
-module.exports = (md) ->
+module.exports = (md, options) ->
   "use strict"
-  md.core.ruler.push "checkbox", checkboxReplace(md)
+  md.core.ruler.push "checkbox", checkboxReplace(md, options)
   return

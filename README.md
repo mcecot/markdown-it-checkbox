@@ -29,13 +29,56 @@ md.render('[ ] unchecked') // =>
 //  <input type="checkbox" id="checkbox0">
 //  <label for="checkbox0">unchecked</label>
 // </p>
+
+md.render('[x] checked') // =>
+// <p>
+//  <input type="checkbox" id="checkbox0" checked="true">
+//  <label for="checkbox0">checked</label>
+// </p>
 ```
 
 _Differences in browser._ If you load script directly into the page, without
 package system, module will add itself globally as `window.markdownitCheckbox`.
 
+## Options
 
-## License
+```js
+var md = require('markdown-it')()
+            .use(require('markdown-it-checkbox'),{
+              divWrap: true,
+              divClass: 'cb',
+              idPrefix: 'cbx_'
+            });
+
+md.render('[ ] unchecked') // =>
+// <p>
+//  <div classname="cb">
+//    <input type="checkbox" id="cbx_0">
+//    <label for="cbx_0">unchecked</label>
+//  </div>
+// </p>
+```
+
+## divWrap
+
+* **Type:** `Boolean`
+* **Default:** `false`
+
+wrap div arround checkbox. this makes it possible to use it for example with [Awesome Bootstrap Checkbox](https://github.com/flatlogic/awesome-bootstrap-checkbox/).
+
+## divClass
+
+* **Type:** `String`
+* **Default:** `checkbox`
+
+classname of div wrapper. will only be used if `divWrap` is enanbled.
+
+## idPrefix
+
+* **Type:** `String`
+* **Default:** `checkbox`
+
+the id of the checkboxs input contains the prefix and an incremental number starting with `0`. i.e. `checkbox1` for the 2nd checkbox.
 
 
 ## License

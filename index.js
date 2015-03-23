@@ -1,39 +1,36 @@
-"use strict"
+var _, checkboxReplace;
 
-function checkboxReplace (md, options) {
+_ = require('underscore');
 
-  var arrayReplaceAt, lastId, options, pattern, splitTextToken;
+checkboxReplace = function(md, options, Token) {
+  "use strict";
+  var arrayReplaceAt, createTokens, defaults, lastId, pattern, splitTextToken;
   arrayReplaceAt = md.utils.arrayReplaceAt;
   lastId = 0;
-  options = options || {
-    divWrap: false
+  defaults = {
+    divWrap: false,
+    divClass: 'checkbox',
+    idPrefix: 'checkbox'
   };
+  options = _.extend(defaults, options);
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i;
-
-  function splitTextToken(original, Token) {
-    var checked, id, label, matches, nodes, ref, text, token, value;
-    text = original.content;
+  createTokens = function(checked, label, Token) {
+    var id, nodes, token;
     nodes = [];
-    matches = text.match(pattern);
-    value = matches[1];
-    label = matches[2];
-    checked = (ref = value === "X" || value === "x") != null ? ref : {
-      "true": false
-    };
 
     /**
      * <div class="checkbox">
      */
     if (options.divWrap) {
       token = new Token("checkbox_open", "div", 1);
-      token.attrs = [["class", "checkbox"]];
+      token.attrs = [["class", options.divClass]];
       nodes.push(token);
     }
 
     /**
      * <input type="checkbox" id="checkbox{n}" checked="true">
      */
-    id = "checkbox" + lastId;
+    id = options.idPrefix + lastId;
     lastId += 1;
     token = new Token("checkbox_input", "input", 0);
     token.attrs = [["type", "checkbox"], ["id", id]];
@@ -65,7 +62,21 @@ function checkboxReplace (md, options) {
     }
     return nodes;
   };
-
+  splitTextToken = function(original, Token) {
+    var checked, label, matches, text, value;
+    text = original.content;
+    matches = text.match(pattern);
+    if (matches === null) {
+      return original;
+    }
+    checked = false;
+    value = matches[1];
+    label = matches[2];
+    if (value === "X" || value === "x") {
+      checked = true;
+    }
+    return createTokens(checked, label, Token);
+  };
   return function(state) {
     var blockTokens, i, j, l, token, tokens;
     blockTokens = state.tokens;
@@ -80,9 +91,7 @@ function checkboxReplace (md, options) {
       i = tokens.length - 1;
       while (i >= 0) {
         token = tokens[i];
-        if (token.type === "text" && pattern.test(token.content)) {
-          blockTokens[j].children = tokens = arrayReplaceAt(tokens, i, splitTextToken(token, state.Token));
-        }
+        blockTokens[j].children = tokens = arrayReplaceAt(tokens, i, splitTextToken(token, state.Token));
         i--;
       }
       j++;
@@ -90,6 +99,10 @@ function checkboxReplace (md, options) {
   };
 };
 
-module.exports = function checkbox_plugin(md, options) {
+
+/*global module */
+
+module.exports = function(md, options) {
+  "use strict";
   md.core.ruler.push("checkbox", checkboxReplace(md, options));
 };
