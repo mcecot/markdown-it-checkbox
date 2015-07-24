@@ -1,5 +1,3 @@
-_ = require 'underscore'
-
 # Checkbox replacement logic.
 #
 
@@ -13,11 +11,11 @@ checkboxReplace = (md, options, Token) ->
     divClass: 'checkbox'
     idPrefix: 'checkbox'
 
-  options = _.extend defaults, options
+  options = md.utils.assign(defaults, options)
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
 
 
-  createTokens = (checked, label, Token) ->
+  createTokens = (checked, label, original, Token) ->
     nodes = []
     ###*
     # <div class="checkbox">
@@ -50,8 +48,9 @@ checkboxReplace = (md, options, Token) ->
     ###
     token = new Token("text", "", 0)
     token.content = label
-    nodes.push token
-
+    original.children[0].content = label
+    nodes.push(child) for child in original.children
+    
     ###*
     # closing tags
     ###
@@ -59,25 +58,30 @@ checkboxReplace = (md, options, Token) ->
     if options.divWrap
       nodes.push new Token("checkbox_close", "div", -1)
 
-    return nodes
-
+    original.children = nodes
+    return original
+      
   splitTextToken = (original, Token) ->
 
-    text      = original.content
-    matches   = text.match pattern
+    if original.children?
+      first_node = original.children[0]
+      if first_node?
+        text      = first_node.content
+        matches   = text.match pattern
 
-    if matches == null
-      return original
+        if matches == null
+          return original
 
-    checked   = false
-    value     = matches[1]
-    label     = matches[2]
+        checked   = false
+        value     = matches[1]
+        label     = matches[2]
 
-    if (value == "X" || value == "x")
-      checked = true
+        if (value == "X" || value == "x")
+          checked = true
 
-    return createTokens(checked, label, Token)
-
+        return createTokens(checked, label, original, Token)
+    
+    return original
 
   return (state) ->
     blockTokens = state.tokens
@@ -88,15 +92,8 @@ checkboxReplace = (md, options, Token) ->
         j++
         continue
       tokens = blockTokens[j].children
-      # We scan from the end, to keep position when new tags added.
-      # Use reversed logic in links start/end match
-      i = tokens.length - 1
-      while i >= 0
-        token = tokens[i]
-        blockTokens[j].children = tokens = arrayReplaceAt(
-          tokens, i, splitTextToken(token, state.Token)
-        )
-        i--
+      token  = blockTokens[j]
+      arrayReplaceAt(blockTokens, j, splitTextToken(token, state.Token))
       j++
     return
 

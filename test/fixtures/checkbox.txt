@@ -31,3 +31,11 @@
 <li><input type="checkbox" id="checkbox5" checked="true"><label for="checkbox5">checked</label></li>
 </ul>
 .
+
+.
+- [X] checked _with_ [link](http://example.com)
+.
+<ul>
+<li><input type="checkbox" id="checkbox6" checked="true"><label for="checkbox6">checked <em>with</em> <a href="http://example.com">link</a></label></li>
+</ul>
+.

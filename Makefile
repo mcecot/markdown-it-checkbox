@@ -14,7 +14,7 @@ lint:
 	./node_modules/.bin/eslint --reset .
 
 test: lint
-	./node_modules/.bin/mocha -R spec
+	./node_modules/.bin/mocha -R spec --require coffee-script/register --compilers coffee:coffee-script/register
 
 coverage:
 	rm -rf coverage
