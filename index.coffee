@@ -12,6 +12,7 @@ checkboxReplace = (md, options, Token) ->
     divWrap: false
     divClass: 'checkbox'
     idPrefix: 'checkbox'
+    disabled: true
 
   options = _.extend defaults, options
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
@@ -36,6 +37,8 @@ checkboxReplace = (md, options, Token) ->
     token.attrs = [["type","checkbox"],["id",id]]
     if(checked == true)
       token.attrs.push ["checked","true"]
+    if(options.disabled)
+      token.attrs.push ["disabled","true"]
     nodes.push token
 
     ###*

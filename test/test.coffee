@@ -53,3 +53,13 @@ describe 'markdown-it-checkbox', ->
         '<label for="cb0">test written</label>' +
         '</p>\n'
       done()
+
+    it 'should should optionally add disabled attribute', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {disabled: true}
+      res = md.render('[X] test written')
+      res.toString().should.be.eql '<p>' +
+        '<input type="checkbox" id="checkbox0" checked="true" disabled>' +
+        '<label for="checkbox0">test written</label>' +
+        '</p>\n'
+      done()
