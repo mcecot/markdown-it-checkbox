@@ -13,6 +13,7 @@ checkboxReplace = (md, options, Token) ->
     divClass: 'checkbox'
     idPrefix: 'checkbox'
     disabled: true
+    customHTML: false
 
   options = _.extend defaults, options
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
@@ -39,6 +40,7 @@ checkboxReplace = (md, options, Token) ->
       token.attrs.push ["checked","true"]
     if(options.disabled)
       token.attrs.push ["disabled","true"]
+
     nodes.push token
 
     ###*
@@ -62,6 +64,8 @@ checkboxReplace = (md, options, Token) ->
     if options.divWrap
       nodes.push new Token("checkbox_close", "div", -1)
 
+    console.log(nodes)
+
     return nodes
 
   splitTextToken = (original, Token) ->
@@ -78,6 +82,7 @@ checkboxReplace = (md, options, Token) ->
 
     if (value == "X" || value == "x")
       checked = true
+
 
     return createTokens(checked, label, Token)
 

@@ -63,3 +63,17 @@ describe 'markdown-it-checkbox', ->
         '<label for="checkbox0">test written</label>' +
         '</p>\n'
       done()
+
+    it 'should apply custom html', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {customHTML: '<div class="checklist-item"><div' +
+        'class="checklist-item__checkbox">{{checkbox}}</div>'+
+        '<div class="checklist-item__label>{{label}}</div></div>'}
+      res = md.render('[X] test written')
+      res.toString().should.be.eql '<p>' +
+        '<div class="checklist-item"><div' +
+        'class="checklist-item__checkbox"><input' +
+        'type="checkbox" id="checkbox0" checked="true"'+
+        ' disabled="true"></div>'+
+        '<div class="checklist-item__label>test written</div></div>'
+      done()
