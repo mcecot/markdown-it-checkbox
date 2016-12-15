@@ -48,9 +48,16 @@ checkboxReplace = (md, options, Token) ->
 
       nodes.push token
 
-
       return nodes
 
+
+    ###*
+    # <div class="checkbox">
+    ###
+    if options.divWrap
+      token = new Token("checkbox_open", "div", 1)
+      token.attrs = [["class",options.divClass]]
+      nodes.push token
 
     ###*
     # <input type="checkbox" id="checkbox{n}" checked="true">
