@@ -19,6 +19,7 @@
     "coffee-script": "^1.7.1",
     "coffeelint": "^1.4.0",
     "coveralls": "*",
+    "cross-spawn": "^5.0.1",
     "del": "^1.1.1",
     "eslint": "0.13.0",
     "eslint-plugin-nodeca": "^1.0.0",

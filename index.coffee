@@ -21,19 +21,40 @@ checkboxReplace = (md, options, Token) ->
 
   createTokens = (checked, label, Token) ->
     nodes = []
-    ###*
-    # <div class="checkbox">
-    ###
-    if options.divWrap
-      token = new Token("checkbox_open", "div", 1)
-      token.attrs = [["class",options.divClass]]
+
+    id = options.idPrefix + lastId
+    lastId += 1
+
+    if options.customHTML
+      token = new Token("html_inline", "", 0)
+
+      content = options.customHTML
+
+      content = content.replace(
+        '{{checkbox}}',
+        """
+        <input \
+          type="checkbox" \
+          id="#{id}" \
+          checked="#{checked}" \
+          disabled="#{options.disabled}"\
+        >\
+        """
+      )
+      content = content.replace('{{id}}', id)
+      content = content.replace('{{label}}', label)
+
+      token.content = content
+
       nodes.push token
+
+
+      return nodes
+
 
     ###*
     # <input type="checkbox" id="checkbox{n}" checked="true">
     ###
-    id = options.idPrefix + lastId
-    lastId += 1
     token = new Token("checkbox_input", "input", 0)
     token.attrs = [["type","checkbox"],["id",id]]
     if(checked == true)
@@ -63,8 +84,6 @@ checkboxReplace = (md, options, Token) ->
     nodes.push new Token("label_close", "label", -1)
     if options.divWrap
       nodes.push new Token("checkbox_close", "div", -1)
-
-    console.log(nodes)
 
     return nodes
 
