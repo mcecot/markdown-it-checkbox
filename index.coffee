@@ -30,19 +30,24 @@ checkboxReplace = (md, options, Token) ->
 
       content = options.customHTML
 
-      content = content.replace(
-        '{{checkbox}}',
-        """
-        <input \
-          type="checkbox" \
-          id="#{id}" \
-          checked="#{checked}" \
-          disabled="#{options.disabled}"\
-        >\
-        """
-      )
-      content = content.replace('{{id}}', id)
-      content = content.replace('{{label}}', label)
+      getEndTagPosition = (str, tagName) ->
+        regexp = new RegExp "<#{tagName}.+?>", "igm"
+
+        matches = regexp.exec str
+
+        if !matches.length
+          return -1
+
+        return matches[0].length + matches.index
+
+      indexLabelAppend = getEndTagPosition(content, 'label')
+
+      newContent = ''
+
+      newContent += content.slice(0, indexLabelAppend)
+      newContent += label + content.slice(indexLabelAppend)
+
+      console.log 'TEST2', newContent
 
       token.content = content
 

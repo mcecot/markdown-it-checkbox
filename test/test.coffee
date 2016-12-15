@@ -69,10 +69,11 @@ describe 'markdown-it-checkbox', ->
       md.use plugin, {customHTML: '
         <div class="checklist-item">\
           <div class="checklist-item__checkbox">\
-            {{checkbox}}\
+            <input type="checkbox">\
           </div>\
-          <label for="{{id}}" class="checklist-item__label">\
-            {{label}}\
+          <label class="checklist-item__label">\
+            <label  class="checklist-item__label"\
+            ></label>\
           </label>\
         </div>'}
       res = md.render('[X] test written')
@@ -86,3 +87,5 @@ describe 'markdown-it-checkbox', ->
             >test written</label>\
         </div></p>\n'
       done()
+
+      # Потестить с несколькими label
