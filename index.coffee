@@ -27,7 +27,7 @@ checkboxReplace = (md, options, Token) ->
 
     if options.customHTML
       token = new Token("html_inline", "", 0)
-      customHTML = options.customHTML
+      { customHTML: customHTML, disabled: disabled} = options
 
       getTag = (str, tagName) ->
         regexp = new RegExp "<#{tagName}.+?>", "igm"
@@ -38,33 +38,37 @@ checkboxReplace = (md, options, Token) ->
 
         return matches[0]
 
-      attr = (tag, [attr, value]) ->
-        attrRegexp = new RegExp "(#{attr}=['\"]).+?(['\"])"
+      attr = (tag, attributes = {}) ->
+        replaceAttr = (regexp, value) ->
+          tag.replace(regexp, "$1#{value}$2")
 
-        replaceAttr = ->
-          tag.replace(attrRegexp, "$1#{value}$2")
-
-        addAttr = ->
+        addAttr = (attr, val) ->
           tagName = tag.match(/<(\w+?)\s/)[1]
           regexp = new RegExp "(<#{tagName})(.+?>)"
 
-          return tag.replace(regexp, "$1 #{attr}=\"#{value}\"$2")
+          return tag.replace(regexp, "$1 #{attr}=\"#{val}\"$2")
 
-        return replaceAttr() if ~tag.search(attrRegexp)
+        for attrName, attrValue of attributes
+          attrRegexp = new RegExp "(#{attrName}=['\"]).+?(['\"])"
 
-        return addAttr()
+          if ~tag.search(attrRegexp)
+            tag = replaceAttr(attrRegexp, attrValue)
+          else
+            tag = addAttr(attrName, attrValue)
+            console.log('RES25', tag)
 
+        tag
 
       labelTag = getTag(customHTML, 'label')
       inputTag = getTag(customHTML, 'input')
 
-      newLabelTag = attr(labelTag, ['for', id])
-      newInputTag = attr(inputTag, ['id', id])
+      newLabelTag = attr(labelTag, 'for': id)
+      newInputTag = attr(inputTag, id: id, checked: checked, disabled: disabled)
 
       customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label)
       customHTML = customHTML.replace(/<input.+?>/, newInputTag)
 
-      console.log('RESULT', customHTML)
+      console.log('RESULT:', customHTML)
 
       token.content = customHTML
 
