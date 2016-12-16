@@ -28,7 +28,6 @@ checkboxReplace = (md, options, Token) ->
     if options.customHTML
       token = new Token("html_inline", "", 0)
       customHTML = options.customHTML
-      content = ''
 
       getTag = (str, tagName) ->
         regexp = new RegExp "<#{tagName}.+?>", "igm"
@@ -39,30 +38,39 @@ checkboxReplace = (md, options, Token) ->
 
         return matches[0]
 
-      getTagPosition = (str, tag) ->
-        return -1 if tag == -1
+      attr = (tag, [attr, value]) ->
+        attrRegexp = new RegExp "(#{attr}=['\"]).+?(['\"])"
 
-        start = str.indexOf(tag)
+        replaceAttr = ->
+          tag.replace(attrRegexp, "$1#{value}$2")
 
-        return start: start, end: start + tag.length
+        addAttr = ->
+          tagName = tag.match(/<(\w+?)\s/)[1]
+          regexp = new RegExp "(<#{tagName})(.+?>)"
+
+          return tag.replace(regexp, "$1 #{attr}=\"#{value}\"$2")
+
+        return replaceAttr() if ~tag.search(attrRegexp)
+
+        return addAttr()
+
 
       labelTag = getTag(customHTML, 'label')
-      indexLabelAppend = getTagPosition(customHTML, labelTag).end
+      inputTag = getTag(customHTML, 'input')
 
-      if ~indexLabelAppend
+      newLabelTag = attr(labelTag, ['for', id])
+      newInputTag = attr(inputTag, ['id', id])
 
-        content += customHTML.slice(0, indexLabelAppend)
-        console.log '1', content
-        content += label + customHTML.slice(indexLabelAppend)
+      customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label)
+      customHTML = customHTML.replace(/<input.+?>/, newInputTag)
 
-      console.log 'TEST222', content
+      console.log('RESULT', customHTML)
 
-      token.content = content
+      token.content = customHTML
 
       nodes.push token
 
       return nodes
-
 
     ###*
     # <div class="checkbox">
