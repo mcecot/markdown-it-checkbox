@@ -72,8 +72,6 @@ describe 'markdown-it-checkbox', ->
             <input type="checkbox">\
           </div>\
           <label class="checklist-item__label">\
-            <label  class="checklist-item__label"\
-            ></label>\
           </label>\
         </div>'}
       res = md.render('[X] test written')
@@ -89,3 +87,4 @@ describe 'markdown-it-checkbox', ->
       done()
 
       # Потестить с несколькими label
+      # Потестить без label и input

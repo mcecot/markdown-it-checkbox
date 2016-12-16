@@ -27,27 +27,35 @@ checkboxReplace = (md, options, Token) ->
 
     if options.customHTML
       token = new Token("html_inline", "", 0)
+      customHTML = options.customHTML
+      content = ''
 
-      content = options.customHTML
-
-      getEndTagPosition = (str, tagName) ->
+      getTag = (str, tagName) ->
         regexp = new RegExp "<#{tagName}.+?>", "igm"
-
         matches = regexp.exec str
 
         if !matches.length
           return -1
 
-        return matches[0].length + matches.index
+        return matches[0]
 
-      indexLabelAppend = getEndTagPosition(content, 'label')
+      getTagPosition = (str, tag) ->
+        return -1 if tag == -1
 
-      newContent = ''
+        start = str.indexOf(tag)
 
-      newContent += content.slice(0, indexLabelAppend)
-      newContent += label + content.slice(indexLabelAppend)
+        return start: start, end: start + tag.length
 
-      console.log 'TEST2', newContent
+      labelTag = getTag(customHTML, 'label')
+      indexLabelAppend = getTagPosition(customHTML, labelTag).end
+
+      if ~indexLabelAppend
+
+        content += customHTML.slice(0, indexLabelAppend)
+        console.log '1', content
+        content += label + customHTML.slice(indexLabelAppend)
+
+      console.log 'TEST222', content
 
       token.content = content
 
