@@ -28,7 +28,7 @@ checkboxReplace = function(md, options, Token) {
         var matches, regexp;
         regexp = new RegExp("<" + tagName + ".+?>", "igm");
         matches = regexp.exec(str);
-        if (!matches.length) {
+        if (!matches) {
           return -1;
         }
         return matches[0];
@@ -63,16 +63,20 @@ checkboxReplace = function(md, options, Token) {
       };
       labelTag = getTag(customHTML, 'label');
       inputTag = getTag(customHTML, 'input');
-      newLabelTag = attr(labelTag, {
-        'for': id
-      });
-      newInputTag = attr(inputTag, {
-        id: id,
-        checked: checked,
-        disabled: disabled
-      });
-      customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label);
-      customHTML = customHTML.replace(/<input.+?>/, newInputTag);
+      if (~labelTag) {
+        newLabelTag = attr(labelTag, {
+          'for': id
+        });
+        customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label);
+      }
+      if (~inputTag) {
+        newInputTag = attr(inputTag, {
+          id: id,
+          checked: checked,
+          disabled: disabled
+        });
+        customHTML = customHTML.replace(/<input.+?>/, newInputTag);
+      }
       token.content = customHTML;
       nodes.push(token);
       return nodes;

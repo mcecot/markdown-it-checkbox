@@ -33,7 +33,7 @@ checkboxReplace = (md, options, Token) ->
         regexp = new RegExp "<#{tagName}.+?>", "igm"
         matches = regexp.exec str
 
-        if !matches.length
+        if !matches
           return -1
 
         return matches[0]
@@ -60,18 +60,22 @@ checkboxReplace = (md, options, Token) ->
 
         return tag
 
+
       labelTag = getTag(customHTML, 'label')
       inputTag = getTag(customHTML, 'input')
 
-      newLabelTag = attr(labelTag, 'for': id)
-      newInputTag = attr(inputTag,
-        id: id,
-        checked: checked,
-        disabled: disabled
-      )
+      if ~labelTag
+        newLabelTag = attr(labelTag, 'for': id)
+        customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label)
 
-      customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label)
-      customHTML = customHTML.replace(/<input.+?>/, newInputTag)
+      if ~inputTag
+        newInputTag = attr(inputTag,
+          id: id,
+          checked: checked,
+          disabled: disabled
+        )
+
+        customHTML = customHTML.replace(/<input.+?>/, newInputTag)
 
       token.content = customHTML
 
