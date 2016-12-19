@@ -51,24 +51,27 @@ checkboxReplace = (md, options, Token) ->
         for attrName, attrValue of attributes
           attrRegexp = new RegExp "(#{attrName}=['\"]).+?(['\"])"
 
+          continue if attrValue == false
+
           if ~tag.search(attrRegexp)
             tag = replaceAttr(attrRegexp, attrValue)
           else
             tag = addAttr(attrName, attrValue)
-            console.log('RES25', tag)
 
-        tag
+        return tag
 
       labelTag = getTag(customHTML, 'label')
       inputTag = getTag(customHTML, 'input')
 
       newLabelTag = attr(labelTag, 'for': id)
-      newInputTag = attr(inputTag, id: id, checked: checked, disabled: disabled)
+      newInputTag = attr(inputTag,
+        id: id,
+        checked: checked,
+        disabled: disabled
+      )
 
       customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label)
       customHTML = customHTML.replace(/<input.+?>/, newInputTag)
-
-      console.log('RESULT:', customHTML)
 
       token.content = customHTML
 

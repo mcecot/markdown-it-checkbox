@@ -66,7 +66,7 @@ describe 'markdown-it-checkbox', ->
 
     it 'should apply custom html', (done) ->
       md = require('markdown-it')()
-      md.use plugin, {customHTML: '
+      md.use plugin, {disabled: true, customHTML: '
         <div class="checklist-item">\
           <div class="checklist-item__checkbox">\
             <input type="checkbox">\
@@ -78,8 +78,8 @@ describe 'markdown-it-checkbox', ->
       res.toString().should.be.eql '
         <p><div class="checklist-item">\
           <div class="checklist-item__checkbox">\
-            <input type="checkbox" id="checkbox0" \
-            checked="true" disabled="true">\
+            <input disabled="true" checked="true" \
+            id="checkbox0" type="checkbox">\
           </div>\
             <label for="checkbox0" class="checklist-item__label"\
             >test written</label>\

@@ -50,11 +50,13 @@ checkboxReplace = function(md, options, Token) {
         for (attrName in attributes) {
           attrValue = attributes[attrName];
           attrRegexp = new RegExp("(" + attrName + "=['\"]).+?(['\"])");
+          if (attrValue === false) {
+            continue;
+          }
           if (~tag.search(attrRegexp)) {
             tag = replaceAttr(attrRegexp, attrValue);
           } else {
             tag = addAttr(attrName, attrValue);
-            console.log('RES25', tag);
           }
         }
         return tag;
@@ -71,7 +73,6 @@ checkboxReplace = function(md, options, Token) {
       });
       customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label);
       customHTML = customHTML.replace(/<input.+?>/, newInputTag);
-      console.log('RESULT:', customHTML);
       token.content = customHTML;
       nodes.push(token);
       return nodes;
