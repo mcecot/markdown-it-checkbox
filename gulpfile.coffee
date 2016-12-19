@@ -6,7 +6,7 @@ bump    = require 'gulp-bump'
 git     = require 'gulp-git'
 filter  = require 'gulp-filter'
 tag     = require 'gulp-tag-version'
-{spawn} = require 'child_process'
+spawn   = require 'cross-spawn'
 
 inc = (importance) ->
   # get all the files to bump version in

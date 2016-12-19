@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prepublish": "gulp coffee --require coffee-script/register",
-    "test": "coffeelint gulpfile.coffee index.coffee test -f ./coffeelint.json && istanbul test _mocha --report lcov -- ./test/*.coffee --require coffee-script/register --reporter spec",
+    "test": "coffeelint gulpfile.coffee index.coffee test -f ./coffeelint.json && istanbul test node_modules/mocha/bin/_mocha --report lcov -- ./test/*.coffee --require coffee-script/register --reporter spec",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "keywords": [
@@ -19,6 +19,7 @@
     "coffee-script": "^1.7.1",
     "coffeelint": "^1.4.0",
     "coveralls": "*",
+    "cross-spawn": "^5.0.1",
     "del": "^1.1.1",
     "eslint": "0.13.0",
     "eslint-plugin-nodeca": "^1.0.0",
