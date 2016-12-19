@@ -45,6 +45,9 @@ checkboxReplace = function(md, options, Token) {
           var regexp, tagName;
           tagName = tag.match(/<(\w+?)\s/)[1];
           regexp = new RegExp("(<" + tagName + ")(.+?>)");
+          if (val === true) {
+            val = "";
+          }
           return tag.replace(regexp, "$1 " + attr + "=\"" + val + "\"$2");
         };
         for (attrName in attributes) {

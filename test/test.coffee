@@ -78,7 +78,7 @@ describe 'markdown-it-checkbox', ->
       res.toString().should.be.eql '
         <p><div class="checklist-item">\
           <div class="checklist-item__checkbox">\
-            <input disabled="true" checked="true" \
+            <input disabled="" checked="" \
             id="checkbox0" type="checkbox">\
           </div>\
             <label for="checkbox0" class="checklist-item__label"\
@@ -98,7 +98,7 @@ describe 'markdown-it-checkbox', ->
       res.toString().should.be.eql '
         <p><div class="checklist-item">\
           <div class="checklist-item__checkbox">\
-            <input disabled="true" checked="true" \
+            <input disabled="" checked="" \
             id="checkbox0" type="checkbox">\
           </div>\
         </div></p>\n'

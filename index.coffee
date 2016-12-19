@@ -46,6 +46,8 @@ checkboxReplace = (md, options, Token) ->
           tagName = tag.match(/<(\w+?)\s/)[1]
           regexp = new RegExp "(<#{tagName})(.+?>)"
 
+          val = "" if val == true
+
           return tag.replace(regexp, "$1 #{attr}=\"#{val}\"$2")
 
         for attrName, attrValue of attributes
