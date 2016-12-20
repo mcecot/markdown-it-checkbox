@@ -1,6 +1,4 @@
-var _, checkboxReplace;
-
-_ = require('underscore');
+var checkboxReplace;
 
 checkboxReplace = function(md, options, Token) {
   "use strict";
@@ -13,7 +11,7 @@ checkboxReplace = function(md, options, Token) {
     idPrefix: 'checkbox',
     disabled: false
   };
-  options = _.extend(defaults, options);
+  options = Object.assign({}, defaults, options);
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i;
   createTokens = function(checked, label, Token) {
     var id, nodes, token;

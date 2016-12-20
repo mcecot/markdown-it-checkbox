@@ -1,5 +1,3 @@
-_ = require 'underscore'
-
 # Checkbox replacement logic.
 #
 
@@ -14,9 +12,8 @@ checkboxReplace = (md, options, Token) ->
     idPrefix: 'checkbox'
     disabled: false
 
-  options = _.extend defaults, options
+  options = Object.assign {}, defaults, options
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
-
 
   createTokens = (checked, label, Token) ->
     nodes = []
