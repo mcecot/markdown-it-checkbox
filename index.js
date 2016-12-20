@@ -1,6 +1,4 @@
-var _, checkboxReplace;
-
-_ = require('underscore');
+var checkboxReplace;
 
 checkboxReplace = function(md, options, Token) {
   "use strict";
@@ -11,10 +9,10 @@ checkboxReplace = function(md, options, Token) {
     divWrap: false,
     divClass: 'checkbox',
     idPrefix: 'checkbox',
-    disabled: true,
+    disabled: false,
     customHTML: false
   };
-  options = _.extend(defaults, options);
+  options = Object.assign({}, defaults, options);
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i;
   createTokens = function(checked, label, Token) {
     var attr, customHTML, disabled, getTag, id, inputTag, labelTag, newInputTag, newLabelTag, nodes, token;
@@ -100,10 +98,10 @@ checkboxReplace = function(md, options, Token) {
     token = new Token("checkbox_input", "input", 0);
     token.attrs = [["type", "checkbox"], ["id", id]];
     if (checked === true) {
-      token.attrs.push(["checked", "true"]);
+      token.attrs.push(["checked", ""]);
     }
     if (options.disabled) {
-      token.attrs.push(["disabled", "true"]);
+      token.attrs.push(["disabled", ""]);
     }
     nodes.push(token);
 

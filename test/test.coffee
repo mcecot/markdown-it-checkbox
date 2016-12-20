@@ -26,7 +26,7 @@ describe 'markdown-it-checkbox', ->
       res = md.render('[X] test written')
       res.toString().should.be.eql '<p>' +
         '<div class="checkbox">' +
-        '<input type="checkbox" id="checkbox0" checked="true">' +
+        '<input type="checkbox" id="checkbox0" checked="">' +
         '<label for="checkbox0">test written</label>' +
         '</div>' +
         '</p>\n'
@@ -38,7 +38,7 @@ describe 'markdown-it-checkbox', ->
       res = md.render('[X] test written')
       res.toString().should.be.eql '<p>' +
         '<div class="cb">' +
-        '<input type="checkbox" id="checkbox0" checked="true">' +
+        '<input type="checkbox" id="checkbox0" checked="">' +
         '<label for="checkbox0">test written</label>' +
         '</div>' +
         '</p>\n'
@@ -49,7 +49,7 @@ describe 'markdown-it-checkbox', ->
       md.use plugin, {idPrefix: 'cb'}
       res = md.render('[X] test written')
       res.toString().should.be.eql '<p>' +
-        '<input type="checkbox" id="cb0" checked="true">' +
+        '<input type="checkbox" id="cb0" checked="">' +
         '<label for="cb0">test written</label>' +
         '</p>\n'
       done()
@@ -59,7 +59,7 @@ describe 'markdown-it-checkbox', ->
       md.use plugin, {disabled: true}
       res = md.render('[X] test written')
       res.toString().should.be.eql '<p>' +
-        '<input type="checkbox" id="checkbox0" checked="true" disabled>' +
+        '<input type="checkbox" id="checkbox0" checked="" disabled="">' +
         '<label for="checkbox0">test written</label>' +
         '</p>\n'
       done()
