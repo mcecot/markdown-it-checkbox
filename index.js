@@ -22,14 +22,22 @@ checkboxReplace = function(md, options, Token) {
     if (options.customHTML) {
       token = new Token("html_inline", "", 0);
       customHTML = options.customHTML, disabled = options.disabled;
-      getTag = function(str, tagName) {
-        var matches, regexp;
-        regexp = new RegExp("<" + tagName + ".+?>", "igm");
-        matches = regexp.exec(str);
-        if (!matches) {
-          return -1;
+      getTag = function(str, tagName, content) {
+        var matches, regexp, res;
+        if (content == null) {
+          content = '';
         }
-        return matches[0];
+        regexp = new RegExp("(<" + tagName + ".*?>)(" + content + ")?", "igm");
+        res = regexp.exec(str);
+        if (!res) {
+          return res;
+        }
+        while (matches = regexp.exec(str)) {
+          if (~matches.indexOf(content) && content.length) {
+            res = matches;
+          }
+        }
+        return res[0];
       };
       attr = function(tag, attributes) {
         var addAttr, attrName, attrRegexp, attrValue, replaceAttr;
@@ -62,15 +70,20 @@ checkboxReplace = function(md, options, Token) {
         }
         return tag;
       };
-      labelTag = getTag(customHTML, 'label');
+      labelTag = getTag(customHTML, 'label', '{label}');
       inputTag = getTag(customHTML, 'input');
-      if (~labelTag) {
+      if (labelTag) {
         newLabelTag = attr(labelTag, {
           'for': id
         });
-        customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label);
+        if (~newLabelTag.search('{label}')) {
+          newLabelTag = newLabelTag.replace('{label}', label);
+          customHTML = customHTML.replace(labelTag, newLabelTag);
+        } else {
+          customHTML = customHTML.replace(/<label.*?>/, newLabelTag + label);
+        }
       }
-      if (~inputTag) {
+      if (inputTag) {
         newInputTag = attr(inputTag, {
           id: id,
           checked: checked,

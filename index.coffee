@@ -26,14 +26,18 @@ checkboxReplace = (md, options, Token) ->
       token = new Token("html_inline", "", 0)
       { customHTML: customHTML, disabled: disabled} = options
 
-      getTag = (str, tagName) ->
-        regexp = new RegExp "<#{tagName}.+?>", "igm"
-        matches = regexp.exec str
+      getTag = (str, tagName, content = '') ->
+        regexp = new RegExp "(<#{tagName}.*?>)(#{content})?", "igm"
+        res = regexp.exec str
 
-        if !matches
-          return -1
+        if !res
+          return res
 
-        return matches[0]
+        while matches = regexp.exec str
+          if ~matches.indexOf(content) && content.length
+            res = matches
+
+        return res[0]
 
       attr = (tag, attributes = {}) ->
         replaceAttr = (regexp, value) ->
@@ -59,15 +63,19 @@ checkboxReplace = (md, options, Token) ->
 
         return tag
 
-
-      labelTag = getTag(customHTML, 'label')
+      labelTag = getTag(customHTML, 'label', '{label}')
       inputTag = getTag(customHTML, 'input')
 
-      if ~labelTag
+      if labelTag
         newLabelTag = attr(labelTag, 'for': id)
-        customHTML = customHTML.replace(/<label.+?>/, newLabelTag + label)
 
-      if ~inputTag
+        if ~newLabelTag.search('{label}')
+          newLabelTag = newLabelTag.replace('{label}', label)
+          customHTML = customHTML.replace(labelTag, newLabelTag)
+        else
+          customHTML = customHTML.replace(/<label.*?>/, newLabelTag + label)
+
+      if inputTag
         newInputTag = attr(inputTag,
           id: id,
           checked: checked,
