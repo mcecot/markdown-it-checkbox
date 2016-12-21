@@ -32,7 +32,7 @@ md.render('[ ] unchecked') // =>
 
 md.render('[x] checked') // =>
 // <p>
-//  <input type="checkbox" id="checkbox0" checked="true">
+//  <input type="checkbox" id="checkbox0" checked="">
 //  <label for="checkbox0">checked</label>
 // </p>
 ```
@@ -47,13 +47,14 @@ var md = require('markdown-it')()
             .use(require('markdown-it-checkbox'),{
               divWrap: true,
               divClass: 'cb',
-              idPrefix: 'cbx_'
+              idPrefix: 'cbx_',
+              readonly: true
             });
 
 md.render('[ ] unchecked') // =>
 // <p>
 //  <div classname="cb">
-//    <input type="checkbox" id="cbx_0">
+//    <input type="checkbox" id="cbx_0" readonly="">
 //    <label for="cbx_0">unchecked</label>
 //  </div>
 // </p>
@@ -80,6 +81,12 @@ classname of div wrapper. will only be used if `divWrap` is enanbled.
 
 the id of the checkboxs input contains the prefix and an incremental number starting with `0`. i.e. `checkbox1` for the 2nd checkbox.
 
+## readonly
+
+* **Type:** `Boolean`
+* **Default:** `false`
+
+set the `input` to be `readonly`. this ensures that users cannot toggle the checkbox in the browser.
 
 ## License
 
