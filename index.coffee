@@ -1,5 +1,3 @@
-_ = require 'underscore'
-
 # Checkbox replacement logic.
 #
 
@@ -12,13 +10,86 @@ checkboxReplace = (md, options, Token) ->
     divWrap: false
     divClass: 'checkbox'
     idPrefix: 'checkbox'
+    disabled: false
+    customHTML: false
 
-  options = _.extend defaults, options
+  options = Object.assign {}, defaults, options
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
-
 
   createTokens = (checked, label, Token) ->
     nodes = []
+
+    id = options.idPrefix + lastId
+    lastId += 1
+
+    if options.customHTML
+      token = new Token("html_inline", "", 0)
+      { customHTML: customHTML, disabled: disabled} = options
+
+      getTag = (str, tagName, content = '') ->
+        regexp = new RegExp "(<#{tagName}.*?>)(#{content})?", "igm"
+        res = regexp.exec str
+
+        if !res
+          return res
+
+        while matches = regexp.exec str
+          if ~matches.indexOf(content) && content.length
+            res = matches
+
+        return res[0]
+
+      attr = (tag, attributes = {}) ->
+        replaceAttr = (regexp, value) ->
+          tag.replace(regexp, "$1#{value}$2")
+
+        addAttr = (attr, val) ->
+          tagName = tag.match(/<(\w+?)\s/)[1]
+          regexp = new RegExp "(<#{tagName})(.+?>)"
+
+          val = "" if val == true
+
+          return tag.replace(regexp, "$1 #{attr}=\"#{val}\"$2")
+
+        for attrName, attrValue of attributes
+          attrRegexp = new RegExp "(#{attrName}=['\"]).+?(['\"])"
+
+          continue if attrValue == false
+
+          if ~tag.search(attrRegexp)
+            tag = replaceAttr(attrRegexp, attrValue)
+          else
+            tag = addAttr(attrName, attrValue)
+
+        return tag
+
+      labelTag = getTag(customHTML, 'label', '{label}')
+      inputTag = getTag(customHTML, 'input')
+
+      if labelTag
+        newLabelTag = attr(labelTag, 'for': id)
+
+        if ~newLabelTag.search('{label}')
+          newLabelTag = newLabelTag.replace('{label}', label)
+          customHTML = customHTML.replace(labelTag, newLabelTag)
+        else
+          customHTML = customHTML.replace(/<label.*?>/, newLabelTag + label)
+
+      if inputTag
+        newInputTag = attr(inputTag,
+          id: id,
+          checked: checked,
+          disabled: disabled
+        )
+
+        customHTML = customHTML.replace(/<input.+?>/, newInputTag)
+
+      token.content = customHTML
+
+      nodes.push token
+
+      return nodes
+
     ###*
     # <div class="checkbox">
     ###
@@ -30,12 +101,12 @@ checkboxReplace = (md, options, Token) ->
     ###*
     # <input type="checkbox" id="checkbox{n}" checked="true">
     ###
-    id = options.idPrefix + lastId
-    lastId += 1
     token = new Token("checkbox_input", "input", 0)
     token.attrs = [["type","checkbox"],["id",id]]
     if(checked == true)
-      token.attrs.push ["checked","true"]
+      token.attrs.push ["checked",""]
+    if(options.disabled)
+      token.attrs.push ["disabled",""]
     nodes.push token
 
     ###*

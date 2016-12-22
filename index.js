@@ -1,6 +1,4 @@
-var _, checkboxReplace;
-
-_ = require('underscore');
+var checkboxReplace;
 
 checkboxReplace = function(md, options, Token) {
   "use strict";
@@ -10,13 +8,93 @@ checkboxReplace = function(md, options, Token) {
   defaults = {
     divWrap: false,
     divClass: 'checkbox',
-    idPrefix: 'checkbox'
+    idPrefix: 'checkbox',
+    disabled: false,
+    customHTML: false
   };
-  options = _.extend(defaults, options);
+  options = Object.assign({}, defaults, options);
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i;
   createTokens = function(checked, label, Token) {
-    var id, nodes, token;
+    var attr, customHTML, disabled, getTag, id, inputTag, labelTag, newInputTag, newLabelTag, nodes, token;
     nodes = [];
+    id = options.idPrefix + lastId;
+    lastId += 1;
+    if (options.customHTML) {
+      token = new Token("html_inline", "", 0);
+      customHTML = options.customHTML, disabled = options.disabled;
+      getTag = function(str, tagName, content) {
+        var matches, regexp, res;
+        if (content == null) {
+          content = '';
+        }
+        regexp = new RegExp("(<" + tagName + ".*?>)(" + content + ")?", "igm");
+        res = regexp.exec(str);
+        if (!res) {
+          return res;
+        }
+        while (matches = regexp.exec(str)) {
+          if (~matches.indexOf(content) && content.length) {
+            res = matches;
+          }
+        }
+        return res[0];
+      };
+      attr = function(tag, attributes) {
+        var addAttr, attrName, attrRegexp, attrValue, replaceAttr;
+        if (attributes == null) {
+          attributes = {};
+        }
+        replaceAttr = function(regexp, value) {
+          return tag.replace(regexp, "$1" + value + "$2");
+        };
+        addAttr = function(attr, val) {
+          var regexp, tagName;
+          tagName = tag.match(/<(\w+?)\s/)[1];
+          regexp = new RegExp("(<" + tagName + ")(.+?>)");
+          if (val === true) {
+            val = "";
+          }
+          return tag.replace(regexp, "$1 " + attr + "=\"" + val + "\"$2");
+        };
+        for (attrName in attributes) {
+          attrValue = attributes[attrName];
+          attrRegexp = new RegExp("(" + attrName + "=['\"]).+?(['\"])");
+          if (attrValue === false) {
+            continue;
+          }
+          if (~tag.search(attrRegexp)) {
+            tag = replaceAttr(attrRegexp, attrValue);
+          } else {
+            tag = addAttr(attrName, attrValue);
+          }
+        }
+        return tag;
+      };
+      labelTag = getTag(customHTML, 'label', '{label}');
+      inputTag = getTag(customHTML, 'input');
+      if (labelTag) {
+        newLabelTag = attr(labelTag, {
+          'for': id
+        });
+        if (~newLabelTag.search('{label}')) {
+          newLabelTag = newLabelTag.replace('{label}', label);
+          customHTML = customHTML.replace(labelTag, newLabelTag);
+        } else {
+          customHTML = customHTML.replace(/<label.*?>/, newLabelTag + label);
+        }
+      }
+      if (inputTag) {
+        newInputTag = attr(inputTag, {
+          id: id,
+          checked: checked,
+          disabled: disabled
+        });
+        customHTML = customHTML.replace(/<input.+?>/, newInputTag);
+      }
+      token.content = customHTML;
+      nodes.push(token);
+      return nodes;
+    }
 
     /**
      * <div class="checkbox">
@@ -30,12 +108,13 @@ checkboxReplace = function(md, options, Token) {
     /**
      * <input type="checkbox" id="checkbox{n}" checked="true">
      */
-    id = options.idPrefix + lastId;
-    lastId += 1;
     token = new Token("checkbox_input", "input", 0);
     token.attrs = [["type", "checkbox"], ["id", id]];
     if (checked === true) {
-      token.attrs.push(["checked", "true"]);
+      token.attrs.push(["checked", ""]);
+    }
+    if (options.disabled) {
+      token.attrs.push(["disabled", ""]);
     }
     nodes.push(token);
 
