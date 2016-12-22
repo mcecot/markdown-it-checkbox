@@ -31,3 +31,84 @@
 <li><input type="checkbox" id="checkbox5" checked=""><label for="checkbox5">checked</label></li>
 </ul>
 .
+
+.
+[ ] unchecked *with* **markdown**
+[ ] unchecked *with* markdown
+[X] checked ~~with~~ [markdown]()
+.
+<p><input type="checkbox" id="checkbox8"><label for="checkbox8">unchecked <em>with</em> <strong>markdown</strong></label>
+<input type="checkbox" id="checkbox7"><label for="checkbox7">unchecked <em>with</em> markdown</label>
+<input type="checkbox" id="checkbox6" checked=""><label for="checkbox6">checked <s>with</s> <a href="">markdown</a></label></p>
+.
+
+.
+> [ ] unchecked *with* **markdown**
+> > Rather replace with:
+> > [ ] unchecked *with* **markdown**
+> >					```
+> >					var block = 'and a code block';
+> >					```
+> > [X] checked ~~with~~ [markdown]()
+.
+<blockquote>
+<p><input type="checkbox" id="checkbox9"><label for="checkbox9">unchecked <em>with</em> <strong>markdown</strong></label></p>
+<blockquote>
+<p>Rather replace with:
+<input type="checkbox" id="checkbox11"><label for="checkbox11">unchecked <em>with</em> <strong>markdown</strong>
+<code>var block = 'and a code block';</code></label>
+<input type="checkbox" id="checkbox10" checked=""><label for="checkbox10">checked <s>with</s> <a href="">markdown</a></label></p>
+</blockquote>
+</blockquote>
+.
+
+.
+- [ ] unchecked *with* **markdown**
+- [X] checked ~~with~~ [markdown]()
+.
+<ul>
+<li><input type="checkbox" id="checkbox12"><label for="checkbox12">unchecked <em>with</em> <strong>markdown</strong></label></li>
+<li><input type="checkbox" id="checkbox13" checked=""><label for="checkbox13">checked <s>with</s> <a href="">markdown</a></label></li>
+</ul>
+.
+
+.
+ Col1              | Col2               | Col3
+-------------------|--------------------|-----------------
+ [ ]               | no label           | not a checkbox
+ [x] text          | without            | markdown
+ [ ] test *markup* | with               | markdown
+ only one checkbox | rest are the label | [X] [ ] [x] [_]
+.
+<table>
+<thead>
+<tr>
+<th>Col1</th>
+<th>Col2</th>
+<th>Col3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ]</td>
+<td>no label</td>
+<td>not a checkbox</td>
+</tr>
+<tr>
+<td><input type="checkbox" id="checkbox14" checked=""><label for="checkbox14">text</label></td>
+<td>without</td>
+<td>markdown</td>
+</tr>
+<tr>
+<td><input type="checkbox" id="checkbox15"><label for="checkbox15">test <em>markup</em></label></td>
+<td>with</td>
+<td>markdown</td>
+</tr>
+<tr>
+<td>only one checkbox</td>
+<td>rest are the label</td>
+<td><input type="checkbox" id="checkbox16" checked=""><label for="checkbox16">[ ] [x] [_]</label></td>
+</tr>
+</tbody>
+</table>
+.

@@ -63,3 +63,18 @@ describe 'markdown-it-checkbox', ->
         '<label for="checkbox0">test written</label>' +
         '</p>\n'
       done()
+
+  describe 'markdown-it-checkbox() with nested markdown', ->
+    plugin = require '../'
+    md = require('markdown-it')()
+    md.use plugin, {divWrap: false}
+
+    it 'should encapsulate subsequent content', (done) ->
+      res = md.render('[X] test *written* ~~in~~ ' +
+                          '**markdown** and [followed]() with content')
+      res.toString().should.be.eql '<p>' +
+        '<input type="checkbox" id="checkbox0" checked="">' +
+        '<label for="checkbox0">test <em>written</em> <s>in</s> ' +
+        '<strong>markdown</strong> and <a href="">followed</a> with content' +
+        '</label></p>\n'
+      done()
