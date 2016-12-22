@@ -63,3 +63,67 @@ describe 'markdown-it-checkbox', ->
         '<label for="checkbox0">test written</label>' +
         '</p>\n'
       done()
+
+    it 'should apply custom html', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {disabled: true, customHTML: '
+        <div class="checklist-item">\
+          <div class="checklist-item__checkbox">\
+            <input type="checkbox">\
+          </div>\
+           <label class="checklist-item__label"\
+           >test written2</label>\
+          <label class="checklist-item__label">\
+          {label}\
+          </label>\
+        </div>'}
+      res = md.render('[X] test written')
+      res.toString().should.be.eql '
+        <p><div class="checklist-item">\
+          <div class="checklist-item__checkbox">\
+            <input disabled="" checked="" \
+            id="checkbox0" type="checkbox">\
+          </div>\
+            <label class="checklist-item__label"\
+            >test written2</label>\
+            <label for="checkbox0" class="checklist-item__label"\
+            >test written</label>\
+        </div></p>\n'
+      done()
+
+    it 'custom html without label tag', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {disabled: true, customHTML: '
+        <div class="checklist-item">\
+          <div class="checklist-item__checkbox">\
+            <input type="checkbox">\
+          </div>\
+        </div>'}
+      res = md.render('[X] test written')
+      res.toString().should.be.eql '
+        <p><div class="checklist-item">\
+          <div class="checklist-item__checkbox">\
+            <input disabled="" checked="" \
+            id="checkbox0" type="checkbox">\
+          </div>\
+        </div></p>\n'
+      done()
+
+    it 'custom html without input tag', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {disabled: true, customHTML: '
+      <div class="checklist-item">\
+        <div class="checklist-item__checkbox">\
+        </div>\
+        <label class="checklist-item__label">\
+        </label>\
+      </div>'}
+      res = md.render('[X] test written')
+      res.toString().should.be.eql '
+      <p><div class="checklist-item">\
+        <div class="checklist-item__checkbox">\
+        </div>\
+        <label for="checkbox0" class="checklist-item__label"\
+        >test written</label>\
+      </div></p>\n'
+      done()
