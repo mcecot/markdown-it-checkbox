@@ -20,36 +20,61 @@ describe 'markdown-it-checkbox', ->
   describe 'markdown-it-checkbox(options)', ->
     plugin = require('../')
 
-    it 'should should optionally wrap arround a div layer', (done) ->
+    it 'should optionally wrap arround a div layer', (done) ->
       md = require('markdown-it')()
       md.use plugin, {divWrap: true}
       res = md.render('[X] test written')
       res.toString().should.be.eql '<p>' +
         '<div class="checkbox">' +
-        '<input type="checkbox" id="checkbox0" checked="true">' +
+        '<input type="checkbox" id="checkbox0" checked="">' +
         '<label for="checkbox0">test written</label>' +
         '</div>' +
         '</p>\n'
       done()
 
-    it 'should should optionally change class of div layer', (done) ->
+    it 'should optionally change class of div layer', (done) ->
       md = require('markdown-it')()
       md.use plugin, {divWrap: true, divClass: 'cb'}
       res = md.render('[X] test written')
       res.toString().should.be.eql '<p>' +
         '<div class="cb">' +
-        '<input type="checkbox" id="checkbox0" checked="true">' +
+        '<input type="checkbox" id="checkbox0" checked="">' +
         '<label for="checkbox0">test written</label>' +
         '</div>' +
         '</p>\n'
       done()
 
-    it 'should should optionally change the id', (done) ->
+    it 'should optionally change the id', (done) ->
       md = require('markdown-it')()
       md.use plugin, {idPrefix: 'cb'}
       res = md.render('[X] test written')
       res.toString().should.be.eql '<p>' +
-        '<input type="checkbox" id="cb0" checked="true">' +
+        '<input type="checkbox" id="cb0" checked="">' +
         '<label for="cb0">test written</label>' +
         '</p>\n'
+      done()
+
+    it 'should optionally be readonly', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {readonly: true}
+      res = md.render('[X] test written')
+      res.toString().should.be.eql '<p>' +
+        '<input type="checkbox" id="checkbox0" checked="" readonly="">' +
+        '<label for="checkbox0">test written</label>' +
+        '</p>\n'
+      done()
+
+  describe 'markdown-it-checkbox() with nested markdown', ->
+    plugin = require '../'
+    md = require('markdown-it')()
+    md.use plugin, {divWrap: false}
+
+    it 'should encapsulate subsequent content', (done) ->
+      res = md.render('[X] test *written* ~~in~~ ' +
+                          '**markdown** and [followed]() with content')
+      res.toString().should.be.eql '<p>' +
+        '<input type="checkbox" id="checkbox0" checked="">' +
+        '<label for="checkbox0">test <em>written</em> <s>in</s> ' +
+        '<strong>markdown</strong> and <a href="">followed</a> with content' +
+        '</label></p>\n'
       done()

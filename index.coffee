@@ -1,8 +1,23 @@
+# Utility functions
 _ = require 'underscore'
 
-# Checkbox replacement logic.
-#
+Array.prototype.move = (element, offset) ->
+  index = this.indexOf(element)
+  # if not found, return immediately
+  return index if index < 0
 
+  newIndex = index + offset
+  newIndex = 0 if newIndex < 0
+  newIndex = this.length - 1 if newIndex >= this.length
+
+  # remove the element from the array
+  removedElement = this.splice(index, 1)[0]
+  # at newIndex, remove 0 elements, insert the removedElement
+  this.splice newIndex, 0, removedElement
+  #return the newIndex of the removedElement
+  return newIndex
+
+# Checkbox replacement logic.
 checkboxReplace = (md, options, Token) ->
   "use strict"
 
@@ -12,6 +27,7 @@ checkboxReplace = (md, options, Token) ->
     divWrap: false
     divClass: 'checkbox'
     idPrefix: 'checkbox'
+    readonly: false
 
   options = _.extend defaults, options
   pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
@@ -28,14 +44,16 @@ checkboxReplace = (md, options, Token) ->
       nodes.push token
 
     ###*
-    # <input type="checkbox" id="checkbox{n}" checked="true">
+    # <input type="checkbox" id="checkbox{n}" checked="" readonly="">
     ###
     id = options.idPrefix + lastId
     lastId += 1
     token = new Token("checkbox_input", "input", 0)
     token.attrs = [["type","checkbox"],["id",id]]
     if(checked == true)
-      token.attrs.push ["checked","true"]
+      token.attrs.push ["checked", ""]
+    if options.readonly
+      token.attrs.push ["readonly", ""]
     nodes.push token
 
     ###*
@@ -97,6 +115,33 @@ checkboxReplace = (md, options, Token) ->
           tokens, i, splitTextToken(token, state.Token)
         )
         i--
+      j++
+
+    j = 0
+    l = blockTokens.length
+    while j < l
+      if blockTokens[j].type != "inline"
+        j++
+        continue
+      tokens = blockTokens[j].children
+      mappedTokens = tokens.map (t, idx) -> {
+        idx: idx
+        type: t.type
+        token: t
+      }
+      suitableIdx = tokens.length - 1
+
+      labelOpens = mappedTokens.filter (t) -> t.type is 'label_open'
+      for open in labelOpens.reverse()
+        if suitableIdx < 0 then suitableIdx = 0
+        while mappedTokens[suitableIdx].type in ['softbreak','checkbox_close']
+          suitableIdx--
+
+        labelClose = mappedTokens.find (t, idx) ->
+          open.idx < idx <= suitableIdx && t.type is 'label_close'
+        tokens.move labelClose.token, suitableIdx - labelClose.idx
+
+        suitableIdx = open.idx - 2
       j++
     return
 

@@ -30,7 +30,7 @@ gulp.task 'coffee', ->
 
 # remove `index.js` and `coverage` dir
 gulp.task 'clean', (cb) ->
-  del ['dist', 'coverage', 'temp'], cb
+  del ['dist', 'coverage', 'temp', 'index.js'], cb
 
 # run tests
 gulp.task 'test', ['coffee'], ->
