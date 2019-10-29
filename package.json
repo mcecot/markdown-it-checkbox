@@ -20,7 +20,7 @@
     "coffeelint": "^1.4.0",
     "coveralls": "*",
     "del": "^1.1.1",
-    "eslint": "0.13.0",
+    "eslint": "6.6.0",
     "eslint-plugin-nodeca": "^1.0.0",
     "gulp": "^3.5.2",
     "gulp-bump": "^0.3.0",
