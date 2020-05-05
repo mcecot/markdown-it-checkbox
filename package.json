@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prepublish": "gulp coffee --require coffee-script/register",
-    "test": "coffeelint gulpfile.coffee index.coffee test -f ./coffeelint.json && istanbul test _mocha --report lcov -- ./test/*.coffee --require coffee-script/register --reporter spec",
+    "test": "coffeelint gulpfile.coffee index.coffee test -f ./coffeelint.json && istanbul test node_modules/mocha/bin/_mocha --report lcov -- ./test/*.coffee --require coffee-script/register --reporter spec",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "keywords": [
@@ -26,7 +26,7 @@
     "gulp-bump": "^0.3.0",
     "gulp-coffee": "^2.1.2",
     "gulp-filter": "^2.0.2",
-    "gulp-git": "^1.1.0",
+    "gulp-git": "^2.8.0",
     "gulp-tag-version": "^1.2.1",
     "gulp-util": "^3.0.4",
     "istanbul": "*",

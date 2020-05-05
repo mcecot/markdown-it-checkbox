@@ -53,3 +53,49 @@ describe 'markdown-it-checkbox', ->
         '<label for="cb0">test written</label>' +
         '</p>\n'
       done()
+
+    it 'should render a checkbox when it is a the end of a line', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {idPrefix: 'cb'}
+      res = md.render('[ ]')
+      res.toString().should.be.eql '<p>' +
+        '<input type="checkbox" id="cb0">' +
+        '<label for="cb0"></label>' +
+        '</p>\n'
+      done()
+
+    it 'should preserve text before & after', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {idPrefix: 'cb'}
+      res = md.render('before [ ] after')
+      res.toString().should.be.eql '<p>' +
+        'before<input type="checkbox" id="cb0">' +
+        '<label for="cb0">after</label>' +
+        '</p>\n'
+      done()
+
+    it 'should render two consecutive checkboxes', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {idPrefix: 'cb'}
+      res = md.render('[ ] one [ ] two')
+      res.toString().should.be.eql '<p>' +
+        '<input type="checkbox" id="cb0">' +
+        '<label for="cb0">one</label>' +
+        '<input type="checkbox" id="cb1">' +
+        '<label for="cb1">two</label>' +
+        '</p>\n'
+      done()
+
+    it 'should render indented checkboxes', (done) ->
+      md = require('markdown-it')()
+      md.use plugin, {idPrefix: 'cb'}
+      res = md.render('- [ ] 1\n- [ ] 2\n  - [ ] 3')
+      res.toString().should.be.eql '<ul>\n' +
+      '<li><input type="checkbox" id="cb0"><label for="cb0">1</label></li>\n' +
+      '<li><input type="checkbox" id="cb1"><label for="cb1">2</label>\n' +
+      '<ul>\n' +
+      '<li><input type="checkbox" id="cb2"><label for="cb2">3</label></li>\n' +
+      '</ul>\n' +
+      '</li>\n' +
+      '</ul>\n'
+      done()

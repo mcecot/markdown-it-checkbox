@@ -14,11 +14,18 @@ checkboxReplace = (md, options, Token) ->
     idPrefix: 'checkbox'
 
   options = _.extend defaults, options
-  pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
+  # Split string into: textBefore checkboxValue textAfter:
+  pattern = /(.*?)\s?\[(X|\s|\_|\-)\]\s?(.*)/i
 
 
-  createTokens = (checked, label, Token) ->
-    nodes = []
+  createTokens = (nodes, matches, Token) ->
+    checked = (matches[2] == "X" || matches[2] == "x")
+    label = matches[3] || ''
+    # We recurse:
+    matches = label.match(pattern)
+    if matches != null
+      label = matches[1]
+
     ###*
     # <div class="checkbox">
     ###
@@ -59,24 +66,22 @@ checkboxReplace = (md, options, Token) ->
     if options.divWrap
       nodes.push new Token("checkbox_close", "div", -1)
 
-    return nodes
+    if(matches != null)
+      createTokens(nodes, matches, Token)
 
   splitTextToken = (original, Token) ->
-
-    text      = original.content
-    matches   = text.match pattern
+    matches = original.content.match(pattern)
 
     if matches == null
       return original
 
-    checked   = false
-    value     = matches[1]
-    label     = matches[2]
+    nodes = []
+    if matches[1] != null
+      original.content = matches[1]
+      nodes = [original]
 
-    if (value == "X" || value == "x")
-      checked = true
-
-    return createTokens(checked, label, Token)
+    createTokens(nodes, matches, Token)
+    return nodes
 
 
   return (state) ->

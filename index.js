@@ -13,10 +13,15 @@ checkboxReplace = function(md, options, Token) {
     idPrefix: 'checkbox'
   };
   options = _.extend(defaults, options);
-  pattern = /\[(X|\s|\_|\-)\]\s(.*)/i;
-  createTokens = function(checked, label, Token) {
-    var id, nodes, token;
-    nodes = [];
+  pattern = /(.*?)\s?\[(X|\s|\_|\-)\]\s?(.*)/i;
+  createTokens = function(nodes, matches, Token) {
+    var checked, id, label, token;
+    checked = matches[2] === "X" || matches[2] === "x";
+    label = matches[3] || '';
+    matches = label.match(pattern);
+    if (matches !== null) {
+      label = matches[1];
+    }
 
     /**
      * <div class="checkbox">
@@ -60,22 +65,23 @@ checkboxReplace = function(md, options, Token) {
     if (options.divWrap) {
       nodes.push(new Token("checkbox_close", "div", -1));
     }
-    return nodes;
+    if (matches !== null) {
+      return createTokens(nodes, matches, Token);
+    }
   };
   splitTextToken = function(original, Token) {
-    var checked, label, matches, text, value;
-    text = original.content;
-    matches = text.match(pattern);
+    var matches, nodes;
+    matches = original.content.match(pattern);
     if (matches === null) {
       return original;
     }
-    checked = false;
-    value = matches[1];
-    label = matches[2];
-    if (value === "X" || value === "x") {
-      checked = true;
+    nodes = [];
+    if (matches[1] !== null) {
+      original.content = matches[1];
+      nodes = [original];
     }
-    return createTokens(checked, label, Token);
+    createTokens(nodes, matches, Token);
+    return nodes;
   };
   return function(state) {
     var blockTokens, i, j, l, token, tokens;
