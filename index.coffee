@@ -14,7 +14,7 @@ checkboxReplace = (md, options, Token) ->
     idPrefix: 'checkbox'
 
   options = _.extend defaults, options
-  pattern = /\[(X|\s|\_|\-)\]\s(.*)/i
+  pattern = /\[(X|V|\s|\_|\-)\]\s(.*)/i
 
 
   createTokens = (checked, label, Token) ->
@@ -73,7 +73,7 @@ checkboxReplace = (md, options, Token) ->
     value     = matches[1]
     label     = matches[2]
 
-    if (value == "X" || value == "x")
+    if (/^[xv]$/i.test(value))
       checked = true
 
     return createTokens(checked, label, Token)
